@@ -1,0 +1,18 @@
+# Entornos virtuales
+.venv/
+__pycache__/
+*.pyc
+
+# Datos y Bases de Datos (No se suben por tamaño y privacidad)
+Data/database/
+Data/raw/*.xlsx
+Data/raw/*.json
+
+# Archivos de configuración de VS Code o Sistema
+.vscode/
+.DS_Store
+*.zip
+*.docx
+
+# Historial de LM Studio / Logs locales
+*.log

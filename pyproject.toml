@@ -1,0 +1,25 @@
+[project]
+name = "asistente-tfg"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "NachoMoyano",email = "nachomf004@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask (>=3.1.3,<4.0.0)",
+    "streamlit (>=1.56.0,<2.0.0)",
+    "requests (>=2.33.1,<3.0.0)",
+    "chromadb (>=1.5.7,<2.0.0)",
+    "sentence-transformers (>=5.4.0,<6.0.0)",
+    "pandas (>=3.0.2,<4.0.0)",
+    "openpyxl (>=3.1.5,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "asistente_tfg", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
