@@ -141,9 +141,13 @@ def chat_endpoint():
             for i, doc in enumerate(results['documents'][0]):
                 contexto_texto += f"- Fragmento {i+1}: {doc}\n"
         
-        prompt_sistema = "Eres un Consultor Experto. Responde la duda teórica usando ÚNICAMENTE el contexto de la base de conocimiento proporcionada."
-        fuentes_visuales = f"Búsqueda Teórica\n\n{contexto_texto}"
+        # Parche de seguridad para evitar Error 500 por desbordamiento de memoria
+        LIMITE_CARACTERES = 6000
+        if len(contexto_texto) > LIMITE_CARACTERES:
+            contexto_texto = contexto_texto[:LIMITE_CARACTERES] + "\n\n... [NOTA: El contexto ha sido truncado por limite de memoria]."
 
+        prompt_sistema = "Eres un Consultor Experto. Responde la duda teorica usando UNICAMENTE el contexto de la base de conocimiento proporcionada."
+        fuentes_visuales = f"Busqueda Teorica\n\n{contexto_texto}"
     elif ruta_elegida == "CATALOGO_BUSQUEDA":
         results = collection_catalogo.query(query_texts=[pregunta_usuario], n_results=5)
         
