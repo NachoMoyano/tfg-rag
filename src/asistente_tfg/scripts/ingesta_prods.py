@@ -12,7 +12,11 @@ import uuid
 import os
 import re
 
+<<<<<<< HEAD
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+=======
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+>>>>>>> 1a026420bd24cbff5af4280428b1ebf7262c76cc
 ARCHIVO_EXCEL = os.path.join(BASE_DIR, "Data", "raw", "miguel_descriptions.xlsx")
 RUTA_BBDD_LOCAL = os.path.join(BASE_DIR, "Data", "database", "chroma_db_prueba")
 NOMBRE_COLECCION = "products_catalog"
