@@ -1,0 +1,65 @@
+[
+    {
+        "id": 1,
+        "latencia": 63.52,
+        "tps": 3.17,
+        "fidelidad": 1,
+        "relevancia": 1
+    },
+    {
+        "id": 2,
+        "latencia": 47.72,
+        "tps": 2.97,
+        "fidelidad": 1,
+        "relevancia": 1
+    },
+    {
+        "id": 3,
+        "latencia": 82.35,
+        "tps": 3.48,
+        "fidelidad": 1,
+        "relevancia": 0
+    },
+    {
+        "id": 4,
+        "latencia": 68.89,
+        "tps": 4.27,
+        "fidelidad": 1,
+        "relevancia": 1
+    },
+    {
+        "id": 5,
+        "latencia": 83.2,
+        "tps": 3.89,
+        "fidelidad": 1,
+        "relevancia": 1
+    },
+    {
+        "id": 6,
+        "latencia": 25.88,
+        "tps": 1.83,
+        "fidelidad": 1,
+        "relevancia": 0
+    },
+    {
+        "id": 7,
+        "latencia": 121.57,
+        "tps": 3.92,
+        "fidelidad": 1,
+        "relevancia": 1
+    },
+    {
+        "id": 8,
+        "latencia": 222.23,
+        "tps": 3.2,
+        "fidelidad": 1,
+        "relevancia": 1
+    },
+    {
+        "id": 9,
+        "latencia": 211.61,
+        "tps": 4.01,
+        "fidelidad": 1,
+        "relevancia": 1
+    }
+]
