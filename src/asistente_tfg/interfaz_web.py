@@ -52,14 +52,15 @@ if pregunta_usuario:
                 if respuesta_api.status_code == 200:
                     datos = respuesta_api.json()
                     texto_bot = datos["respuesta"]
-                    fuentes = datos["documentos_usados"]
+                    fuentes_label = datos["documentos_usados"]
+                    contexto_real = datos.get("contexto_recuperado", "")
                     
                     # Mostramos la respuesta de la IA
                     st.markdown(texto_bot)
                     
-                    # (Opcional) Mostrar las fuentes en un desplegable
-                    with st.expander("Ver documentos de referencia"):
-                        st.text(fuentes)
+                    # Mostrar las fuentes en un desplegable con el contexto real
+                    with st.expander(f"Ver documentos de referencia ({fuentes_label})"):
+                        st.text(contexto_real if contexto_real else fuentes_label)
                         
                     # Guardamos en el historial
                     st.session_state.mensajes.append({"rol": "assistant", "contenido": texto_bot})

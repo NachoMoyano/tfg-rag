@@ -114,7 +114,7 @@ def ejecutar_pruebas():
                     "id": item["id"],
                     "pregunta": item["pregunta"],
                     "respuesta": texto_resp,
-                    "contexto": data.get("documentos_usados", ""),
+                    "contexto": data.get("contexto_recuperado", ""),
                     "latencia": round(latencia, 2),
                     "tps": round(tps, 2),
                     "estado": "OK"
