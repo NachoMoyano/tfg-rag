@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TFG-RAG — Diagrama de Flujo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px 40px;
+      background: #1a1a2e;
+      color: #eee;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+      color: #e0e0e0;
+    }
+    h2 {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #888;
+      margin-top: 0;
+      margin-bottom: 30px;
+    }
+    .diagram-section {
+      background: #16213e;
+      border-radius: 12px;
+      padding: 30px 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+    .diagram-section h3 {
+      text-align: center;
+      color: #7ec8e3;
+      font-size: 1.2rem;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+    }
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      font-size: 0.85rem;
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend .dot {
+      width: 14px; height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Asistente RAG para Marketplace de Datos</h1>
+<h2>Trabajo de Fin de Grado — Diagrama de Flujo Completo</h2>
+
+<!-- ====== DIAGRAMA 1: Pipeline principal ====== -->
+<div class="diagram-section">
+  <h3>1. Pipeline RAG Principal</h3>
+  <div class="mermaid">
+flowchart TD
+    classDef ui       fill:#0f3460,stroke:#e94560,color:#fff,stroke-width:2px
+    classDef api      fill:#533483,stroke:#e94560,color:#fff,stroke-width:2px
+    classDef llm      fill:#e94560,stroke:#fff,color:#fff,stroke-width:2px
+    classDef db       fill:#0a3d62,stroke:#7ec8e3,color:#fff,stroke-width:2px
+    classDef decision fill:#f5a623,stroke:#fff,color:#000,stroke-width:2px
+    classDef process  fill:#1b4332,stroke:#52b788,color:#fff,stroke-width:2px
+
+    A["Usuario escribe pregunta"]:::ui
+    B["Streamlit UI<br/><i>interfaz_web.py</i><br/>UUID session_id"]:::ui
+    C["POST /chat<br/><i>api_orquestador.py</i><br/>Flask :5000"]:::api
+
+    D["Obtener historial<br/><i>db.obtener_historial()</i>"]:::db
+    E["Router Semántico<br/><i>router.clasificar()</i><br/>LLM temp=0.0, max_tokens=10"]:::llm
+
+    F{"Categoria"}:::decision
+    G["GENERAL<br/>Conocimiento teorico"]:::process
+    H["CATALOGO_BUSQUEDA<br/>Buscar productos"]:::process
+    I["CATALOGO_DETALLE<br/>Ficha de producto"]:::process
+
+    J["ChromaDB<br/><i>retriever.recuperar_contexto()</i>"]:::db
+    K["Coleccion: general_knowledge<br/>n_results = 3"]:::db
+    L["Coleccion: products_catalog<br/>n_results = 5"]:::db
+    M["Coleccion: products_catalog<br/>n_results = 1"]:::db
+
+    N["Construir Prompt Aumentado<br/>sistema + historial + contexto + pregunta"]:::process
+    O["LLM Local<br/><i>LM Studio :1234</i><br/>temp=0.3, max_tokens=1500"]:::llm
+    P["Guardar en SQLite<br/><i>db.guardar_mensaje()</i>"]:::db
+    Q["Respuesta JSON<br/>respuesta + documentos + contexto"]:::api
+    R["Mostrar respuesta<br/>+ expander con fuentes"]:::ui
+
+    A --> B --> C
+    C --> D
+    C --> E
+    E --> F
+    F -->|GENERAL| G
+    F -->|CATALOGO_BUSQUEDA| H
+    F -->|CATALOGO_DETALLE| I
+
+    G --> K
+    H --> L
+    I --> M
+
+    K --> J
+    L --> J
+    M --> J
+
+    J --> N
+    D --> N
+    N --> O
+    O --> P
+    P --> Q --> R
+  </div>
+</div>
+
+<!-- ====== DIAGRAMA 2: Enrutador semántico ====== -->
+<div class="diagram-section">
+  <h3>2. Enrutador Semantico (router.py)</h3>
+  <div class="mermaid">
+flowchart LR
+    classDef input    fill:#0f3460,stroke:#e94560,color:#fff,stroke-width:2px
+    classDef llm      fill:#e94560,stroke:#fff,color:#fff,stroke-width:2px
+    classDef decision fill:#f5a623,stroke:#fff,color:#000,stroke-width:2px
+    classDef output   fill:#1b4332,stroke:#52b788,color:#fff,stroke-width:2px
+    classDef fallback fill:#d32f2f,stroke:#fff,color:#fff,stroke-width:2px
+
+    P["Pregunta del usuario"]:::input
+    T["Few-Shot Prompt<br/>6 ejemplos anotados"]:::llm
+    L["LLM<br/>temp=0.0<br/>max_tokens=10"]:::llm
+    V{"Validar etiqueta"}:::decision
+
+    R1["GENERAL"]:::output
+    R2["CATALOGO_BUSQUEDA"]:::output
+    R3["CATALOGO_DETALLE"]:::output
+    FB["Fallback<br/>CATALOGO_BUSQUEDA"]:::fallback
+
+    P --> T --> L --> V
+    V -->|contiene GENERAL| R1
+    V -->|contiene DETALLE| R3
+    V -->|otro texto valido| R2
+    V -->|error o timeout| FB
+  </div>
+</div>
+
+<!-- ====== DIAGRAMA 3: Ingesta de datos ====== -->
+<div class="diagram-section">
+  <h3>3. Pipeline de Ingesta</h3>
+  <div class="mermaid">
+flowchart TD
+    classDef source  fill:#0f3460,stroke:#e94560,color:#fff,stroke-width:2px
+    classDef process fill:#533483,stroke:#e94560,color:#fff,stroke-width:2px
+    classDef db      fill:#0a3d62,stroke:#7ec8e3,color:#fff,stroke-width:2px
+
+    subgraph Conocimiento Teorico
+      S1["DataSharingKB.md<br/>786 lineas"]:::source
+      P1["Chunking<br/>800 chars + 150 overlap"]:::process
+      P2["Limpieza Markdown<br/>eliminar #, *, etc."]:::process
+      P3["Filtrar chunks < 100 chars"]:::process
+      P4["Vectorizar<br/>paraphrase-multilingual<br/>-MiniLM-L12-v2"]:::process
+      D1["ChromaDB<br/>general_knowledge"]:::db
+      S1 --> P1 --> P2 --> P3 --> P4 --> D1
+    end
+
+    subgraph Catalogo de Productos
+      S2["miguel_descriptions.xlsx"]:::source
+      P5["Extraer columnas<br/>Marketplace, Titulo,<br/>Desc. corta/larga"]:::process
+      P6["Limpiar texto<br/>espacios, chars especiales"]:::process
+      P7["Enriquecer vector<br/>titulo + proveedor +<br/>resumen + 300 chars"]:::process
+      P8["Insertar en lotes<br/>5000 productos/lote"]:::process
+      D2["ChromaDB<br/>products_catalog"]:::db
+      S2 --> P5 --> P6 --> P7 --> P8 --> D2
+    end
+  </div>
+</div>
+
+<!-- ====== DIAGRAMA 4: Arquitectura de componentes ====== -->
+<div class="diagram-section">
+  <h3>4. Arquitectura de Componentes</h3>
+  <div class="mermaid">
+flowchart TB
+    classDef ui      fill:#0f3460,stroke:#e94560,color:#fff,stroke-width:2px
+    classDef api     fill:#533483,stroke:#e94560,color:#fff,stroke-width:2px
+    classDef core    fill:#1b4332,stroke:#52b788,color:#fff,stroke-width:2px
+    classDef storage fill:#0a3d62,stroke:#7ec8e3,color:#fff,stroke-width:2px
+    classDef ext     fill:#e94560,stroke:#fff,color:#fff,stroke-width:2px
+    classDef cfg     fill:#4a4a4a,stroke:#aaa,color:#fff,stroke-width:1px
+
+    U["Navegador Web"]:::ui
+    ST["Streamlit<br/>interfaz_web.py<br/>Puerto variable"]:::ui
+    FL["Flask API<br/>api_orquestador.py<br/>Puerto 5000"]:::api
+
+    CFG["config.py<br/>Rutas, URLs, Modelo"]:::cfg
+    RT["router.py<br/>Enrutador Semantico"]:::core
+    RV["retriever.py<br/>Recuperador de Contexto"]:::core
+    DB["db.py<br/>Persistencia"]:::core
+
+    CR["ChromaDB<br/>chroma_db_prueba/"]:::storage
+    SQ["SQLite<br/>operacion.db"]:::storage
+    LM["LM Studio<br/>localhost:1234"]:::ext
+
+    U <-->|HTTP| ST
+    ST <-->|"POST /chat"| FL
+
+    FL --> RT
+    FL --> RV
+    FL --> DB
+
+    RT --> CFG
+    RV --> CFG
+    DB --> CFG
+
+    RT <-->|"temp=0.0"| LM
+    FL <-->|"temp=0.3"| LM
+    RV <--> CR
+    DB <--> SQ
+  </div>
+</div>
+
+<div class="legend">
+  <span><span class="dot" style="background:#0f3460;border:2px solid #e94560"></span> Interfaz (UI)</span>
+  <span><span class="dot" style="background:#533483;border:2px solid #e94560"></span> API</span>
+  <span><span class="dot" style="background:#e94560;border:2px solid #fff"></span> LLM</span>
+  <span><span class="dot" style="background:#0a3d62;border:2px solid #7ec8e3"></span> Almacenamiento</span>
+  <span><span class="dot" style="background:#1b4332;border:2px solid #52b788"></span> Logica de negocio</span>
+  <span><span class="dot" style="background:#f5a623;border:2px solid #fff"></span> Decision</span>
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#16213e',
+      primaryColor: '#533483',
+      lineColor: '#7ec8e3',
+      fontSize: '14px'
+    },
+    flowchart: {
+      htmlLabels: true,
+      curve: 'basis',
+      rankSpacing: 50,
+      nodeSpacing: 30
+    }
+  });
+</script>
+
+</body>
+</html>
