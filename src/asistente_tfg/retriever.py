@@ -86,9 +86,9 @@ def recuperar_contexto(pregunta: str, categoria: str) -> dict:
     elif categoria == "CATALOGO_BUSQUEDA":
         if results["metadatas"] and results["metadatas"][0]:
             for meta in results["metadatas"][0]:
-                titulo    = meta.get("titulo",           "N/A")
-                proveedor = meta.get("proveedor",        "N/A")
-                desc_corta = meta.get("descripcion_corta", "N/A")
+                titulo    = meta.get("titulo","N/A")
+                proveedor = meta.get("proveedor","N/A")
+                desc_corta = meta.get("descripcion_corta","N/A")
                 contexto_texto += f"| {titulo} | {proveedor} | {desc_corta} |\n"
 
         prompt_sistema = (

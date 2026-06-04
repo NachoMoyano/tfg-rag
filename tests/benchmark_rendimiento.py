@@ -5,7 +5,11 @@ import os
 
 # Configuracion
 API_URL = "http://localhost:5000/chat"
-OUTPUT_FILE = "resultados_laboratorio.json"
+
+# Cambia esto antes de ejecutar con cada modelo
+NOMBRE_MODELO = "llama3"
+
+OUTPUT_FILE = f"resultados_{NOMBRE_MODELO}.json"
 
 # dataset_pruebas = [
 #     # --- BLOQUE 1: CONCEPTOS GENERALES (GENERAL) - ¡NUEVO EXAMEN BASADO EN TEORÍA REAL! ---

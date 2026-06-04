@@ -4,7 +4,12 @@ import statistics
 
 # Configuracion
 LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
-INPUT_FILE = "resultados_laboratorio.json"
+
+# Cambia esto para que coincida con el modelo que evaluaste en benchmark_rendimiento
+NOMBRE_MODELO = "llama3"
+
+INPUT_FILE = f"resultados_{NOMBRE_MODELO}.json"
+OUTPUT_FILE = f"informe_calidad_{NOMBRE_MODELO}.json"
 
 def llamar_juez(prompt):
     payload = {
@@ -96,9 +101,9 @@ def procesar_evaluacion():
     print("="*40)
     
     # Opcional: Guardar el informe de calidad para la memoria
-    with open("informe_calidad_final.json", "w", encoding="utf-8") as f:
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(informe_final, f, indent=4, ensure_ascii=False)
-    print("Informe detallado guardado en 'informe_calidad_final.json'")
+    print(f"Informe detallado guardado en '{OUTPUT_FILE}'")
 
 if __name__ == "__main__":
     procesar_evaluacion()
