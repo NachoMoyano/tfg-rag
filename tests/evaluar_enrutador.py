@@ -163,7 +163,7 @@ def ejecutar_benchmark(nombre_modelo: str):
     print("-" * 70)
     for r in resultados:
         icono = "OK" if r["correcto"] else "FALLO"
-        marca = "  " if r["correcto"] else ">>""
+        marca = "  " if r["correcto"] else ">> "
         print(f"  {marca} [{icono}] {r['esperado']:20s} -> {r['prediccion']:20s} ({r['tiempo_ms']}ms)")
         if not r["correcto"]:
             print(f"         Prompt: {r['prompt']}")

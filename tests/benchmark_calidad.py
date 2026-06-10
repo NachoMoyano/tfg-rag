@@ -6,7 +6,7 @@ import statistics
 LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
 
 # Cambia esto para que coincida con el modelo que evaluaste en benchmark_rendimiento
-NOMBRE_MODELO = "llama3"
+NOMBRE_MODELO = "Gemma12B"
 
 INPUT_FILE = f"resultados_{NOMBRE_MODELO}.json"
 OUTPUT_FILE = f"informe_calidad_{NOMBRE_MODELO}.json"

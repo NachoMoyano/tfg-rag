@@ -7,12 +7,12 @@ import os
 API_URL = "http://localhost:5000/chat"
 
 # Cambia esto antes de ejecutar con cada modelo
-NOMBRE_MODELO = "llama3"
+NOMBRE_MODELO = "Gemma12B"
 
 OUTPUT_FILE = f"resultados_{NOMBRE_MODELO}.json"
 
 dataset_pruebas = [
-    # --- BLOQUE 1: CONCEPTOS GENERALES (GENERAL) - ¡NUEVO EXAMEN BASADO EN TEORÍA REAL! ---
+    # --- BLOQUE 1: CONCEPTOS GENERALES (GENERAL) ---
     {"id": 1, "pregunta": "Explica la diferencia entre los modelos de precios Subscription-based y One-off en los productos de datos.", "categoria": "GENERAL"},
     {"id": 2, "pregunta": "¿Cuáles son las ventajas y limitaciones de entregar datos mediante Amazon S3?", "categoria": "GENERAL"},
     {"id": 3, "pregunta": "Diferencia conceptual entre la resolución temporal (Temporal resolution) y la frecuencia de actualización (Refresh rate).", "categoria": "GENERAL"},
